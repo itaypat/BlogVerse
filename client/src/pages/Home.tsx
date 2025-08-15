@@ -53,10 +53,10 @@ export default function Home() {
         className="mb-10"
       >
         <h1 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 tracking-wider text-center pt-10 pb-5">
-          Welcome to BlogVerse
+          Welcome to SecondBrain
         </h1>
         <p className="text-white/60 text-center mt-2">
-          Where developers write, share, and glow ✨
+          AI powered website for managing knowlage
         </p>
       </motion.div>
 

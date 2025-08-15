@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Sidebar from "./SideBar";
-import Footer from "./Footer";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -41,7 +40,7 @@ export default function Layout({ children }: LayoutProps) {
           </svg>
         </button>
         <h1 className="text-lg font-bold tracking-wider text-purple-400">
-          BlogVerse
+          SecondBrain
         </h1>
         <div className="w-6" /> {/* Spacer */}
       </div>
@@ -52,8 +51,7 @@ export default function Layout({ children }: LayoutProps) {
           isSidebarOpen && window.innerWidth >= 1024 ? "lg:ml-64" : "lg:ml-20"
         }`}
       >
-        {children}
-        <Footer/>
+  {children}
       </main>
 
     </div>

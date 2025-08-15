@@ -8,6 +8,7 @@ import Layout from './components/Layout'
 import PostPage from './pages/PostPage'
 import CreatePost from './pages/CreatePost'
 import AllPosts from './pages/AllPosts'
+import Chatbot from './pages/Chatbot'
 import ProfilePage from './pages/ProfilePage'
 
 function App() {
@@ -33,6 +34,15 @@ function App() {
               <ProtectedRoute>
                 <Layout>
                   <AllPosts/>
+                </Layout>
+              </ProtectedRoute>
+            }/>
+          <Route 
+            path='/chat' 
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <Chatbot/>
                 </Layout>
               </ProtectedRoute>
             }/>

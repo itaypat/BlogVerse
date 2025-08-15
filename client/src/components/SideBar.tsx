@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Home, PencilLine, User, LogOut, List } from "lucide-react";
+import { Home, PencilLine, User, LogOut, List, MessageSquare } from "lucide-react";
 import { removeToken } from "@/utils/auth";
 
 interface SidebarProps {
@@ -11,6 +11,7 @@ const navItems = [
   { to: "/", label: "Home", icon: <Home size={20} /> },
   { to: "/posts", label: "Posts", icon: <List size={20} /> },
   { to: "/create", label: "Create", icon: <PencilLine size={20} /> },
+  { to: "/chat", label: "Chatbot", icon: <MessageSquare size={20} /> },
   { to: "/profile", label: "Profile", icon: <User size={20} /> },
 ];
 
@@ -49,7 +50,7 @@ export default function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
               isOpen ? "block" : "hidden"
             }`}
           >
-            BlogVerse
+            SecondBrain
           </h1>
           <button
             onClick={toggleSidebar}
