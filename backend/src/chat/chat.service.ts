@@ -60,7 +60,10 @@ export class ChatService {
   /** Strict mode: inject system prompt with grounded posts context */
   private async prepareStrictMessages(userMessages: Message[]): Promise<Message[]> {
     const posts = await this.postModel.findAll({ order: [['date', 'DESC']], limit: 50 });
-    const snippets = posts.map(p => `כותרת: ${p.title}\nתאריך: ${p.date}\n${truncate(p.content, 1200)}`).join('\n\n---\n\n');
+    const snippets = posts.map(p => {
+      const plain = stripHtml(p.content);
+      return `כותרת: ${p.title}\nתאריך: ${p.date}\n${truncate(plain, 1200)}`;
+    }).join('\n\n---\n\n');
     const system: Message = {
       role: 'system',
       content: [
@@ -84,7 +87,10 @@ export class ChatService {
   /** Dynamic mode: general knowledge PLUS optional posts context (not restrictive). */
   private async prepareDynamicMessages(userMessages: Message[]): Promise<Message[]> {
     const posts = await this.postModel.findAll({ order: [['date', 'DESC']], limit: 30 });
-    const snippets = posts.map(p => `כותרת: ${p.title}\n${truncate(p.content, 600)}`).join('\n\n---\n\n');
+    const snippets = posts.map(p => {
+      const plain = stripHtml(p.content);
+      return `כותרת: ${p.title}\n${truncate(plain, 600)}`;
+    }).join('\n\n---\n\n');
     const dynamicSystem: Message = {
       role: 'system',
       content: [
@@ -120,4 +126,20 @@ export interface CompleteOptions {
 function truncate(text: string | undefined, max: number) {
   if (!text) return '';
   return text.length > max ? text.slice(0, max) + '…' : text;
+}
+
+function stripHtml(html?: string) {
+  if (!html) return '';
+  return html
+    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/\s+/g, ' ')
+    .trim();
 }

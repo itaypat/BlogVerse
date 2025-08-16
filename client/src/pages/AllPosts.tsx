@@ -12,6 +12,7 @@ interface Post {
   content: string;
   date: string;
   summary?: string;
+  contentText?: string;
 }
 
 export default function AllPosts() {
@@ -89,6 +90,22 @@ export default function AllPosts() {
 
     return list;
   }, [posts, search, sortBy]);
+
+  function stripHtml(html?: string) {
+    if (!html) return "";
+    return html
+      .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+      .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+      .replace(/<[^>]+>/g, ' ')
+      .replace(/&nbsp;/g, ' ')
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
 
   if (loading) {
     return (
@@ -186,7 +203,8 @@ export default function AllPosts() {
                 {post.date ? new Date(post.date).toDateString() : ""}
               </p>
               <p className="text-white/80 line-clamp-3" dir="auto" style={{ unicodeBidi: 'plaintext' }}>
-                {post.summary || post.content}
+                  {(post.summary || post.contentText || stripHtml(post.content))
+                    .slice(0, 180)}
               </p>
               <button
                 onClick={(e) => {

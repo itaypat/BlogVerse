@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import axiosInstance from "@/api/axiosInstance";
@@ -12,6 +11,110 @@ export default function CreatePost() {
   // const [image, setImage] = useState("");
   const [content, setContent] = useState("");
   const navigate = useNavigate();
+  const editorRef = useRef<HTMLDivElement | null>(null);
+  const quillInstance = useRef<any>(null);
+
+  // Dynamically load Quill (JS + CSS) only once; no package install needed
+  useEffect(() => {
+    const loadQuill = async () => {
+      if (typeof window === "undefined") return;
+      if ((window as any).Quill) {
+        initQuill();
+        return;
+      }
+      // Inject CSS
+      if (!document.getElementById("quill-css")) {
+        const link = document.createElement("link");
+        link.id = "quill-css";
+        link.rel = "stylesheet";
+        link.href = "https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css";
+        document.head.appendChild(link);
+      }
+      // Inject dark override styles (only once)
+      if (!document.getElementById("quill-dark-style")) {
+        const style = document.createElement("style");
+        style.id = "quill-dark-style";
+        style.innerHTML = `
+          .ql-snow .ql-toolbar { background:#1e293b; border:1px solid #334155; color:#e2e8f0; }
+          .ql-snow .ql-toolbar button svg { filter: brightness(0.85); }
+          .ql-snow .ql-toolbar button:hover svg { filter: brightness(1); }
+          .ql-snow .ql-container { border:1px solid #334155; }
+          .ql-container.ql-snow { background:#0f172a; }
+          .ql-editor { min-height:200px; color:#f1f5f9; line-height:1.55; }
+          .ql-editor.ql-blank::before { color:#64748b; font-style: italic; }
+          .ql-snow .ql-stroke { stroke:#e2e8f0; }
+          .ql-snow .ql-fill { fill:#e2e8f0; }
+          .ql-snow .ql-picker { color:#e2e8f0; }
+          .ql-snow .ql-picker-options { background:#1e293b; border:1px solid #334155; }
+          .ql-snow .ql-picker.ql-expanded .ql-picker-label { color:#fff; }
+          .ql-snow .ql-tooltip { background:#1e293b; border:1px solid #334155; color:#e2e8f0; }
+          .ql-snow .ql-tooltip input { background:#0f172a; border:1px solid #334155; color:#e2e8f0; }
+          .ql-direction-rtl { direction: rtl; text-align: right; }
+          .ql-direction-ltr { direction: ltr; text-align: left; }
+        `;
+        document.head.appendChild(style);
+      }
+      // Inject Script
+      const scriptId = "quill-js";
+      if (!document.getElementById(scriptId)) {
+        const script = document.createElement("script");
+        script.id = scriptId;
+        script.src = "https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js";
+        script.async = true;
+        script.onload = () => initQuill();
+        script.onerror = () => console.error("Failed to load Quill from CDN");
+        document.body.appendChild(script);
+      } else {
+        initQuill();
+      }
+    };
+
+    const initQuill = () => {
+      if (quillInstance.current || !(window as any).Quill || !editorRef.current) return;
+      const Quill = (window as any).Quill;
+      const toolbarOptions = [
+        [{ header: [1, 2, 3, false] }],
+        ["bold", "italic", "underline", "strike"],
+        [{ color: [] }, { background: [] }],
+        [{ list: "ordered" }, { list: "bullet" }],
+        [{ align: [] }, { direction: 'rtl' }],
+        ["blockquote", "code-block"],
+        ["link", "image"],
+        ["clean"],
+      ];
+      quillInstance.current = new Quill(editorRef.current, {
+        theme: "snow",
+        placeholder: "Write your post content here...",
+        modules: { toolbar: toolbarOptions },
+      });
+      quillInstance.current.on("text-change", () => {
+        const html = quillInstance.current.root.innerHTML;
+        setContent(html);
+        autoDetectDirection();
+      });
+      autoDetectDirection();
+    };
+
+    loadQuill();
+  }, []);
+
+  // Detect if most characters (first 40) are Hebrew and set direction accordingly
+  const autoDetectDirection = () => {
+    if (!quillInstance.current) return;
+    const text = quillInstance.current.getText().slice(0, 60);
+    const hebrewMatches = text.match(/[\u0590-\u05FF]/g) || [];
+    const isHebrew = hebrewMatches.length > 3; // threshold
+    const root: HTMLElement = quillInstance.current.root;
+    if (isHebrew) {
+      root.setAttribute('dir', 'rtl');
+      root.classList.add('ql-direction-rtl');
+      root.classList.remove('ql-direction-ltr');
+    } else {
+      root.setAttribute('dir', 'ltr');
+      root.classList.add('ql-direction-ltr');
+      root.classList.remove('ql-direction-rtl');
+    }
+  };
   
 
 const handleSubmit = async (e: React.FormEvent) => {
@@ -72,12 +175,17 @@ const handleSubmit = async (e: React.FormEvent) => {
                 className="bg-white/5 border border-white/20 text-white placeholder:text-white/40"
               /> */}
 
-              <Textarea
-                placeholder="Write your post content here..."
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                className="bg-white/5 border border-white/20 text-white placeholder:text-white/40"
-              />
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-white/80">Content</label>
+                <div className="rounded-md overflow-hidden border border-white/10 bg-slate-900/60">
+                  <div
+                    ref={editorRef}
+                    className="quill-editor min-h-[200px]"
+                    style={{ background: "transparent" }}
+                  />
+                </div>
+                <p className="text-xs text-white/40">Rich text enabled. Hebrew detected automatically (RTL). Use toolbar direction button if needed.</p>
+              </div>
 
               <Button
                 type="submit"
