@@ -21,11 +21,19 @@ export class ChatService {
     let finalMessages = messages;
     if (groundWithPosts) {
       const posts = await this.postModel.findAll({ order: [['date', 'DESC']], limit: 50 });
-      const snippets = posts.map(p => `Title: ${p.title}\nDate: ${p.date}\nContent: ${truncate(p.content, 1200)}`).join('\n\n---\n\n');
-    const system = {
+      // Provide lightweight contextual snippets without rigid labels to encourage natural referencing.
+      const snippets = posts.map(p => `כותרת: ${p.title}\nתאריך: ${p.date}\n${truncate(p.content, 1200)}`).join('\n\n---\n\n');
+      const system = {
         role: 'system' as const,
         content:
-          'You are a helpful assistant for the NoteAI app. Answer ONLY using the provided blog posts context. If the answer is not in the context, reply exactly with the token: NO_ANSWER (and nothing else). Keep responses concise and include the post title when useful. Context follows:\n\n' + snippets,
+          'You are an assistant for a notes/blog knowledge base. RULES:\n' +
+          '- Use ONLY the provided posts context below.\n' +
+          '- If the answer is not present, reply exactly: NO_ANSWER\n' +
+          '- Answer in the same language as the user.\n' +
+          '- Write naturally. Do NOT start with a standalone title line. Do NOT wrap titles with ** **.\n' +
+          '- When helpful, refer to a source like: "לפי הפוסט על X" or "על פי הפוסט בנושא Y" inside a sentence (not as a heading).\n' 
+          // '- Keep it concise and conversational.\n' +
+          // 'CONTEXT START\n' + snippets + '\nCONTEXT END',
       };
       finalMessages = [system, ...messages.filter(m => m.role !== 'system')];
     }
