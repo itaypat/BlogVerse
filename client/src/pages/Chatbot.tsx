@@ -3,6 +3,8 @@ import axiosInstance from '@/api/axiosInstance';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface ChatMessage {
   role: 'system' | 'user' | 'assistant';
@@ -51,7 +53,7 @@ export default function Chatbot() {
   return (
     <div className="min-h-[70vh] flex flex-col w-full">
 
-      <div className="w-full max-w-4xl mx-auto flex-1 overflow-y-auto space-y-4 p-4 bg-white/5 border border-white/10 rounded-2xl">
+  <div className="w-full max-w-5xl mx-auto flex-1 overflow-y-auto space-y-4 p-6 bg-white/5 border border-white/10 rounded-2xl">
         {messages
           .filter(m => m.role !== 'system')
           .map((m, i) => (
@@ -60,17 +62,21 @@ export default function Chatbot() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.2 }}
-              className={`max-w-[85%] p-3 rounded-xl whitespace-pre-wrap ${m.role === 'user' ? 'ml-auto bg-gradient-to-r from-teal-600/40 to-sky-500/40' : 'mr-auto bg-white/10'} border border-white/10 text-white`}
+              className={`max-w-[90%] p-4 rounded-xl whitespace-pre-wrap ${m.role === 'user' ? 'ml-auto bg-gradient-to-r from-teal-600/40 to-sky-500/40' : 'mr-auto bg-white/10'} border border-white/10 text-white`}
               dir="auto"
               style={{ unicodeBidi: 'plaintext' }}
             >
-              {m.content}
+              {m.role === 'assistant' ? (
+                <div className="prose prose-invert max-w-none prose-p:my-2 prose-li:my-1">
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{m.content}</ReactMarkdown>
+                </div>
+              ) : m.content}
             </motion.div>
           ))}
         <div ref={endRef} />
   </div>
 
-      <div className="w-full max-w-4xl mx-auto flex items-center justify-between gap-4 mt-4 mb-1 px-1">
+  <div className="w-full max-w-5xl mx-auto flex items-center justify-between gap-4 mt-4 mb-1 px-1">
         <div className="flex items-center gap-3 text-xs sm:text-sm text-white/70">
           <span className={!groundWithPosts ? 'font-semibold text-white' : ''}>Dynamic</span>
           <button
@@ -91,7 +97,7 @@ export default function Chatbot() {
         </div>
       </div>
 
-  <div className="flex gap-2 w-full max-w-4xl mx-auto">
+  <div className="flex gap-2 w-full max-w-5xl mx-auto px-1">
         <Input
           value={input}
           onChange={(e) => setInput(e.target.value)}

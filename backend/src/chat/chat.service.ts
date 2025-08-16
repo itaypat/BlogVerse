@@ -21,7 +21,7 @@ export class ChatService {
     const baseMessages = opts.messages || [];
     const preparedMessages = mode === 'strict'
       ? await this.prepareStrictMessages(baseMessages)
-      : this.prepareDynamicMessages(baseMessages);
+      : await this.prepareDynamicMessages(baseMessages);
 
     const url = `${endpoint}/openai/deployments/${deployment}/chat/completions?api-version=${apiVersion}`;
     const payload = {
@@ -81,12 +81,22 @@ export class ChatService {
     return [system, ...userMessages.filter(m => m.role !== 'system')];
   }
 
-  /** Dynamic mode: allow model to use general knowledge; keep original messages (strip legacy system). */
-  private prepareDynamicMessages(userMessages: Message[]): Message[] {
-    // We could optionally insert a lightweight system message describing dynamic behavior.
+  /** Dynamic mode: general knowledge PLUS optional posts context (not restrictive). */
+  private async prepareDynamicMessages(userMessages: Message[]): Promise<Message[]> {
+    const posts = await this.postModel.findAll({ order: [['date', 'DESC']], limit: 30 });
+    const snippets = posts.map(p => `כותרת: ${p.title}\n${truncate(p.content, 600)}`).join('\n\n---\n\n');
     const dynamicSystem: Message = {
       role: 'system',
-      content: 'You are a helpful assistant (MODE: DYNAMIC). Use general knowledge plus reasoning. Answer naturally.'
+      content: [
+        'You are a helpful assistant (MODE: DYNAMIC).',
+        'You may use BOTH the optional posts context below AND broader world knowledge.',
+        'Prefer, when relevant, to ground answers on the posts ("לפי הפוסט על ..."), but you are not forced to.',
+        'Write naturally; no standalone title line.',
+        '- Answer in the same language as the user main prompt (english / hebrew). ',
+        'OPTIONAL CONTEXT START',
+        snippets,
+        'OPTIONAL CONTEXT END'
+      ].join('\n')
     };
     return [dynamicSystem, ...userMessages.filter(m => m.role !== 'system')];
   }
