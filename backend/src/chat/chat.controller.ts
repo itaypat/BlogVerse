@@ -8,7 +8,10 @@ export class ChatController {
   constructor(private readonly chat: ChatService) {}
 
   @Post('complete')
-  async complete(@Body() body: { messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }> }) {
+  async complete(@Body() body: { 
+    messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }>; 
+    groundWithPosts?: boolean; // optional flag from client to choose grounding mode
+  }) {
     const apiKey = process.env.AZURE_OPENAI_API_KEY as string;
     const endpoint = process.env.AZURE_OPENAI_ENDPOINT as string; // https://<resource>.openai.azure.com
     const deployment = process.env.AZURE_OPENAI_DEPLOYMENT as string; // your deployment name
@@ -24,7 +27,7 @@ export class ChatController {
       deployment,
       apiVersion,
       messages: body.messages || [],
-      groundWithPosts: true,
+      groundWithPosts: body.groundWithPosts !== undefined ? body.groundWithPosts : true,
     });
 
     return { content: result.content };

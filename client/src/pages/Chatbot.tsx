@@ -15,6 +15,7 @@ export default function Chatbot() {
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [groundWithPosts, setGroundWithPosts] = useState(true); // toggle for grounding mode
   const endRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -29,7 +30,7 @@ export default function Chatbot() {
     setInput('');
     setLoading(true);
     try {
-      const res = await axiosInstance.post('/chat/complete', { messages: next });
+  const res = await axiosInstance.post('/chat/complete', { messages: next, groundWithPosts });
       const reply = (res.data?.content as string) ?? '';
       setMessages([...next, { role: 'assistant', content: reply }]);
     } catch (e) {
@@ -49,6 +50,25 @@ export default function Chatbot() {
 
   return (
     <div className="min-h-[70vh] flex flex-col w-full">
+      <div className="w-full max-w-4xl mx-auto flex items-center justify-between mb-2 gap-4">
+        <h2 className="text-lg font-semibold text-white">Chatbot</h2>
+        <div className="flex items-center gap-2 text-sm text-white/80">
+          <span className={!groundWithPosts ? 'font-semibold text-white' : ''}>General</span>
+          <button
+            type="button"
+            onClick={() => setGroundWithPosts(g => !g)}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 focus:ring-offset-slate-900 text-xs ${groundWithPosts ? 'bg-gradient-to-r from-teal-600 to-sky-500' : 'bg-white/20'}`}
+            aria-pressed={groundWithPosts}
+            aria-label="Toggle grounding with blog posts"
+          >
+            <span
+              className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform ${groundWithPosts ? 'translate-x-6' : 'translate-x-1'}`}
+            />
+          </button>
+          <span className={groundWithPosts ? 'font-semibold text-white' : ''}>Blog Posts</span>
+        </div>
+      </div>
+
       <div className="w-full max-w-4xl mx-auto flex-1 overflow-y-auto space-y-4 p-4 bg-white/5 border border-white/10 rounded-2xl">
         {messages
           .filter(m => m.role !== 'system')
