@@ -56,7 +56,7 @@ export default function PostPage() {
         className="w-full max-w-4xl"
       >
         <Card className="relative backdrop-blur-md bg-white/10 border border-white/20 shadow-xl rounded-2xl overflow-hidden">
-          <div className="absolute inset-0 z-0 rounded-2xl bg-gradient-to-r from-pink-500/10 via-purple-500/10 to-blue-500/10 blur-xl opacity-60 animate-pulse" />
+          <div className="absolute inset-0 z-0 rounded-2xl bg-gradient-to-r from-emerald-400/10 via-teal-500/10 to-sky-500/10 blur-xl opacity-60 animate-pulse" />
 
           <CardContent className="relative z-10 p-4 sm:p-8 space-y-6">
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-2" dir="auto" style={{ unicodeBidi: 'plaintext' }}>

@@ -49,7 +49,7 @@ const handleSubmit = async (e: React.FormEvent) => {
         className="w-full max-w-3xl"
       >
         <Card className="relative backdrop-blur-md bg-white/10 border border-white/20 shadow-xl rounded-2xl">
-          <div className="absolute inset-0 z-0 rounded-2xl bg-gradient-to-r from-pink-500/20 via-purple-500/20 to-blue-500/20 blur-2xl opacity-60 animate-pulse" />
+          <div className="absolute inset-0 z-0 rounded-2xl bg-gradient-to-r from-emerald-400/20 via-teal-500/20 to-sky-500/20 blur-2xl opacity-60 animate-pulse" />
           <CardContent className="relative z-10 p-4 sm:p-8 space-y-4 sm:space-y-6">
             <h1 className="text-2xl sm:text-3xl font-bold text-white text-center mb-4 sm:mb-6">
               Create a New Post
@@ -81,7 +81,7 @@ const handleSubmit = async (e: React.FormEvent) => {
 
               <Button
                 type="submit"
-                className="w-full bg-gradient-to-r from-purple-600 to-blue-500 hover:from-pink-500 hover:to-purple-500 text-white font-bold shadow-md transition-all duration-300"
+                className="w-full bg-gradient-to-r from-teal-600 to-sky-500 hover:from-cyan-500 hover:to-teal-600 text-white font-bold shadow-md transition-all duration-300"
               >
                 Publish Post
               </Button>

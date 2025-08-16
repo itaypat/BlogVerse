@@ -41,7 +41,7 @@ export default function SignupPage() {
         transition={{ duration: 0.7 }}
       >
         <Card className="backdrop-blur-md bg-white/10 border border-white/20 shadow-xl rounded-2xl p-6 relative">
-          <div className="absolute inset-0 z-0 rounded-2xl bg-gradient-to-r from-cyan-500/20 via-purple-500/20 to-pink-500/20 blur-2xl opacity-60 animate-pulse" />
+          <div className="absolute inset-0 z-0 rounded-2xl bg-gradient-to-r from-emerald-400/20 via-teal-500/20 to-sky-500/20 blur-2xl opacity-60 animate-pulse" />
           <CardContent className="z-10 relative">
             <h2 className="text-3xl font-bold text-white mb-6 text-center tracking-widest">
               SIGN UP
@@ -70,7 +70,7 @@ export default function SignupPage() {
               />
               <Button
                 type="submit"
-                className="w-full bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-blue-500 hover:to-pink-500 text-white font-bold shadow-md transition-all duration-300"
+                className="w-full bg-gradient-to-r from-teal-600 to-sky-500 hover:from-cyan-500 hover:to-teal-600 text-white font-bold shadow-md transition-all duration-300"
               >
                 Create Account
               </Button>

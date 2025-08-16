@@ -68,8 +68,8 @@ export default function Home() {
         transition={{ duration: 0.7 }}
         className="mb-10"
       >
-        <h1 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 tracking-wider text-center pt-10 pb-5">
-          Welcome to SecondBrain
+  <h1 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-400 to-sky-500 tracking-wider text-center pt-10 pb-5">
+          Welcome to NoteAI
         </h1>
         <p className="text-white/60 text-center mt-2">
           AI powered website for managing knowlage
@@ -84,7 +84,7 @@ export default function Home() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search posts by title, content, or author"
-            className="pl-9 bg-white/10 border-white/20 text-white placeholder-white/50"
+            className="pl-9 pr-10 bg-white/10 border-white/20 text-white placeholder-white/50"
             aria-label="Search posts"
           />
           {search && (
@@ -104,10 +104,10 @@ export default function Home() {
       <div className="flex justify-end mb-6">
         <button
           onClick={() => navigate("/create")}
-          className="flex items-center gap-2 px-5 py-2 text-sm font-medium bg-gradient-to-r from-purple-600 to-blue-500 hover:from-pink-500 hover:to-purple-500 text-white rounded-xl shadow-lg transition-all"
+          className="flex items-center gap-2 px-5 py-2 text-sm font-medium bg-gradient-to-r from-teal-600 to-sky-500 hover:from-cyan-500 hover:to-teal-600 text-white rounded-xl shadow-lg transition-all"
         >
           <PlusCircle size={18} />
-          Create New Post
+          Create New Note
         </button>
       </div>
 
@@ -118,17 +118,17 @@ export default function Home() {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="bg-gradient-to-br from-pink-500/10 via-purple-600/10 to-blue-500/10 border border-white/10 rounded-2xl p-6 backdrop-blur-md shadow-lg"
+            className="bg-gradient-to-br from-emerald-500/10 via-teal-500/10 to-sky-500/10 border border-white/10 rounded-2xl p-6 backdrop-blur-md shadow-lg"
           >
             <h2 className="text-2xl font-bold text-white/80 mb-2">
-              🌟 Featured Post
+              🌟 Featured Note
             </h2>
-            <h3 className="text-xl font-semibold text-purple-300">
+            <h3 className="text-xl font-semibold text-teal-300">
               {featuredPost.title}
             </h3>
             <p className="text-white/60 mt-2">{featuredPost.summary}</p>
             <button
-                className="mt-4 px-4 py-2 bg-blue-600/60 text-white rounded-md hover:bg-pink-500/60 transition-all text-sm cursor-pointer"
+                className="mt-4 px-4 py-2 bg-sky-600/60 text-white rounded-md hover:bg-teal-500/60 transition-all text-sm cursor-pointer"
                 onClick={() => navigate(`/post/${featuredPost.postId}`)}
               >
                 Read Featured
@@ -150,7 +150,7 @@ export default function Home() {
               className="bg-white/10 p-4 rounded-xl border border-white/10 hover:bg-white/20 transition backdrop-blur"
             >
               <h3 className="text-xl font-semibold text-white/80 mb-4" dir="auto" style={{ unicodeBidi: 'plaintext' }}>
-                Trending 🔥
+                Smart Suggestion 💠
               </h3>
                 <h4 className="text-lg font-semibold text-white" dir="auto" style={{ unicodeBidi: 'plaintext' }}>{post.title}</h4>
                 <p className="text-sm text-white/60 mt-1 line-clamp-2" dir="auto" style={{ unicodeBidi: 'plaintext' }}>
@@ -176,9 +176,9 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-md shadow-md hover:shadow-purple-700/40 hover:scale-[1.01] transition-all duration-300"
+            className="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-md shadow-md hover:shadow-teal-700/40 hover:scale-[1.01] transition-all duration-300"
           >
-            <h2 className="text-2xl font-semibold text-purple-300" dir="auto" style={{ unicodeBidi: 'plaintext' }}>
+            <h2 className="text-2xl font-semibold text-teal-300" dir="auto" style={{ unicodeBidi: 'plaintext' }}>
               {post.title}
             </h2>
             <p className="text-sm text-white/40 mt-1">

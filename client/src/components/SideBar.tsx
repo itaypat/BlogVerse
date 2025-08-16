@@ -46,11 +46,11 @@ export default function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
         {/* Header */}
         <div className={`flex items-center ${isOpen ? "justify-between" : "justify-center"}  py-3`}>
           <h1
-            className={`text-xl font-bold text-purple-400 tracking-widest transition-all ${
+            className={`text-xl font-bold text-teal-400 tracking-widest transition-all ${
               isOpen ? "block" : "hidden"
             }`}
           >
-            SecondBrain
+            NoteAI
           </h1>
           <button
             onClick={toggleSidebar}
@@ -102,7 +102,7 @@ export default function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
               }}
               className={`flex items-center gap-3 px-4 py-2 rounded-xl transition-all duration-300 ${
                 location.pathname === to
-                  ? "bg-gradient-to-r from-purple-600 to-blue-500"
+                  ? "bg-gradient-to-r from-teal-600 to-sky-500"
                   : "hover:bg-white/10 text-white/80"
               }`}
             >

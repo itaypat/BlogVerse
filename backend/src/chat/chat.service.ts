@@ -25,7 +25,7 @@ export class ChatService {
     const system = {
         role: 'system' as const,
         content:
-          'You are a helpful assistant for the SecondBrain app. Answer ONLY using the provided blog posts context. If the answer is not in the context, reply exactly with the token: NO_ANSWER (and nothing else). Keep responses concise and include the post title when useful. Context follows:\n\n' + snippets,
+          'You are a helpful assistant for the NoteAI app. Answer ONLY using the provided blog posts context. If the answer is not in the context, reply exactly with the token: NO_ANSWER (and nothing else). Keep responses concise and include the post title when useful. Context follows:\n\n' + snippets,
       };
       finalMessages = [system, ...messages.filter(m => m.role !== 'system')];
     }

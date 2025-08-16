@@ -58,7 +58,7 @@ export default function Chatbot() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.2 }}
-              className={`max-w-[85%] p-3 rounded-xl whitespace-pre-wrap ${m.role === 'user' ? 'ml-auto bg-gradient-to-r from-purple-600/40 to-blue-500/40' : 'mr-auto bg-white/10'} border border-white/10 text-white`}
+              className={`max-w-[85%] p-3 rounded-xl whitespace-pre-wrap ${m.role === 'user' ? 'ml-auto bg-gradient-to-r from-teal-600/40 to-sky-500/40' : 'mr-auto bg-white/10'} border border-white/10 text-white`}
               dir="auto"
               style={{ unicodeBidi: 'plaintext' }}
             >
@@ -76,7 +76,7 @@ export default function Chatbot() {
           placeholder="Ask the assistant…"
           className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
         />
-        <Button onClick={send} disabled={loading} className="bg-gradient-to-r from-purple-600 to-blue-500 text-white">
+  <Button onClick={send} disabled={loading} className="bg-gradient-to-r from-teal-600 to-sky-500 text-white">
           {loading ? 'Sending…' : 'Send'}
         </Button>
       </div>

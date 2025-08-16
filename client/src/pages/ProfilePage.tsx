@@ -69,7 +69,7 @@ const ProfilePage = () => {
           transition={{ duration: 0.7 }}
         >
           <Card className="backdrop-blur-md bg-white/10 border border-white/20 shadow-xl rounded-2xl p-8 relative">
-            <div className="absolute inset-0 z-0 rounded-2xl bg-gradient-to-r from-pink-500/20 via-purple-500/20 to-blue-500/20 blur-2xl opacity-60 animate-pulse" />
+            <div className="absolute inset-0 z-0 rounded-2xl bg-gradient-to-r from-emerald-400/20 via-teal-500/20 to-sky-500/20 blur-2xl opacity-60 animate-pulse" />
             <div className="z-10 relative">
               <h2 className="text-3xl font-bold text-white mb-6 text-center tracking-widest">
                 Profile
