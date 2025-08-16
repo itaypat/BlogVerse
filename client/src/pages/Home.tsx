@@ -1,9 +1,10 @@
 // src/pages/HomePage.tsx
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle, Search, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "@/api/axiosInstance";
+import { Input } from "@/components/ui/input";
 
 interface Post {
   postId: number;
@@ -17,6 +18,7 @@ interface Post {
 export default function Home() {
   const navigate = useNavigate();
   const [posts, setPosts] = useState<Post[]>([]);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
 
@@ -34,14 +36,28 @@ export default function Home() {
 
   }, []);
 
-  // Shuffle and organize posts
-  const shuffle = (arr: Post[]) => [...arr].sort(() => 0.5 - Math.random());
-  const randomIndex = Math.floor(Math.random() * posts.length);
-  const featuredPost : any = posts[randomIndex];
-  const trendingPosts = shuffle(posts).slice(1, 4);
-  const otherPosts = shuffle(posts).slice(2);
+  // Filter, shuffle and organize posts
+  const filteredPosts = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return posts;
+    return posts.filter((p) => {
+      const title = p.title?.toLowerCase() ?? "";
+      const content = p.content?.toLowerCase() ?? "";
+      const author = p.author?.toLowerCase() ?? "";
+      const summary = p.summary?.toLowerCase() ?? "";
+      return (
+        title.includes(q) || content.includes(q) || author.includes(q) || summary.includes(q)
+      );
+    });
+  }, [posts, search]);
 
-  const tags = ["#React", "#Tailwind", "#GlassUI", "#Frontend", "#DevTips"];
+  const shuffle = (arr: Post[]) => [...arr].sort(() => 0.5 - Math.random());
+  const randomIndex = filteredPosts.length ? Math.floor(Math.random() * filteredPosts.length) : 0;
+  const featuredPost : any = filteredPosts[randomIndex];
+  const trendingPosts = shuffle(filteredPosts).slice(1, 4);
+  const otherPosts = shuffle(filteredPosts).slice(2);
+
+  // removed tags, replaced by search bar
 
   return (
     <main>
@@ -60,17 +76,28 @@ export default function Home() {
         </p>
       </motion.div>
 
-      {/* Tags */}
-      <div className="flex flex-wrap gap-3 justify-center mb-10">
-        {tags.map((tag) => (
-          <motion.div
-            key={tag}
-            whileHover={{ scale: 1.1 }}
-            className="px-4 py-1 bg-white/10 border border-white/10 text-white text-sm rounded-full backdrop-blur-md hover:bg-purple-500/30 transition"
-          >
-            {tag}
-          </motion.div>
-        ))}
+      {/* Search */}
+      <div className="flex justify-center mb-10 px-4">
+        <div className="relative w-full max-w-xl">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-white/50" size={18} />
+          <Input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search posts by title, content, or author"
+            className="pl-9 bg-white/10 border-white/20 text-white placeholder-white/50"
+            aria-label="Search posts"
+          />
+          {search && (
+            <button
+              type="button"
+              onClick={() => setSearch("")}
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-white/60 hover:text-white"
+              aria-label="Clear search"
+            >
+              <X size={16} />
+            </button>
+          )}
+        </div>
       </div>
 
       {/* CTA */}
@@ -169,57 +196,7 @@ export default function Home() {
         ))}
       </div>
 
-      {/* Author & Newsletter */}
-      <div className="my-14 grid grid-cols-1 md:grid-cols-2 gap-6">
-        <motion.div
-          initial={{ opacity: 0, x: -50 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6 }}
-          className="bg-white/10 border border-white/10 p-6 rounded-2xl backdrop-blur-md"
-        >
-          <h3 className="text-xl font-semibold text-white mb-2">
-            Author Spotlight
-          </h3>
-          <div className="flex items-center gap-4">
-            <img
-              src="https://api.dicebear.com/9.x/notionists/svg?seed=Felix"
-              alt="author"
-              className="w-16 h-16 rounded-full border border-white/20"
-            />
-            <div>
-              <p className="text-white font-medium">Abhishek Sharma</p>
-              <p className="text-white/50 text-sm">Full Stack Developer</p>
-            </div>
-          </div>
-          <p className="text-white/60 mt-4">
-            Abhishek writes about futuristic UI, performance optimization, and
-            the evolving React ecosystem.
-          </p>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6 }}
-          className="bg-white/5 border border-white/10 p-6 rounded-2xl backdrop-blur-md"
-        >
-          <h3 className="text-xl font-semibold text-white mb-2">
-            Stay Updated
-          </h3>
-          <p className="text-white/60 mb-3">
-            Subscribe to get the latest updates, trends & tips delivered
-            weekly.
-          </p>
-          <input
-            type="email"
-            placeholder="Your email"
-            className="w-full mb-3 px-4 py-2 bg-white/10 border border-white/20 text-white placeholder-white/40 rounded-md"
-          />
-          <button className="w-full px-4 py-2 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-md hover:from-pink-500 hover:to-purple-500">
-            Subscribe
-          </button>
-        </motion.div>
-      </div>
+  {/* Removed Author Spotlight & Newsletter per request */}
     </main>
   );
 }
