@@ -10,7 +10,8 @@ export class ChatController {
   @Post('complete')
   async complete(@Body() body: { 
     messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }>; 
-    groundWithPosts?: boolean; // optional flag from client to choose grounding mode
+    groundWithPosts?: boolean; // legacy flag (true => strict)
+    mode?: 'strict' | 'dynamic'; // new explicit mode (overrides groundWithPosts if provided)
   }) {
     const apiKey = process.env.AZURE_OPENAI_API_KEY as string;
     const endpoint = process.env.AZURE_OPENAI_ENDPOINT as string; // https://<resource>.openai.azure.com
@@ -21,13 +22,15 @@ export class ChatController {
       throw new Error('Azure OpenAI environment variables are missing');
     }
 
+    const mode = body.mode ?? (body.groundWithPosts === false ? 'dynamic' : 'strict');
     const result = await this.chat.complete({
       apiKey,
       endpoint,
       deployment,
       apiVersion,
       messages: body.messages || [],
-      groundWithPosts: body.groundWithPosts !== undefined ? body.groundWithPosts : true,
+      groundWithPosts: mode === 'strict', // maintain legacy field for compatibility
+      mode,
     });
 
     return { content: result.content };
